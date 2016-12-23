@@ -1,0 +1,12 @@
+{
+  "id": "dev0",
+  "servertype_sensu": [
+    {
+      "hostname": "sensu",
+      "ports": [
+        80,
+        8080
+      ]
+    }
+  ]
+}
