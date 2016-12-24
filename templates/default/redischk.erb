@@ -1,0 +1,12 @@
+{
+  flags = REUSE
+  socket_type = stream
+  wait = no
+  user = nobody
+  port = 12346
+  server = /usr/sbin/redis-role.sh
+  log_on_failure += USERID
+  disable = no
+  per_source = UNLIMITED
+  only_from = 0.0.0.0/0
+}

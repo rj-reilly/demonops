@@ -1,12 +1,29 @@
 {
   "id": "dev0",
+  "servertype_lb": [
+
+  ],
+  "servertype_rabbitmq": [
+  ],
+  "servertype_redis": [
+
+  ],
   "servertype_sensu": [
     {
       "hostname": "sensu",
-      "ports": [
-        80,
-        8080
-      ]
+      "ports": [22,4567]
     }
+  ],
+  "servertype_influxdb": [
+
+  ],
+  "servertype_statsd": [
+
+  ],
+  "servertype_grafana": [
+
+  ],
+  "servertype_analysis": [
+
   ]
 }
