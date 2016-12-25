@@ -5,6 +5,9 @@ driver:
 provisioner:
   name: chef_solo
 
+transport:
+ ssh_key: ~/demonops/rreilly.pem
+
 platforms:
   - name: ubuntu-16.04
 
