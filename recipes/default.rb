@@ -50,16 +50,42 @@ servertypes.each do |servertype|
   end
 end
 
+############################
+#set the id of the dbag
+############################
+id = farm['id']
+
+
 mytypes.each do |type|
   case type
   when "servertype_lb"
   puts "Selecting Server Type #{type}".blue
 
+  firewall 'default' do
+    action :install
+  end
+
+  me['ports'].each do |port|
+     firewall_rule port do
+       port     port.to_i
+       command  :allow
+     end
+  end
+
+
+  package 'haproxy' do
+    action :install
+  end
+
+
   when "servertype_rabbitmq"
   puts "Selecting Server Type #{type}".blue
+  include_recipe 'sensu::rabbitmq'
+
 
   when "servertype_redis"
   puts "Selecting Server Type #{type}".blue
+  include_recipe 'sensu::redis'
 
   when "servertype_sensu"
   puts "Selecting Server Type #{type}".blue
@@ -67,12 +93,36 @@ mytypes.each do |type|
   #Fire wall rules for everyone
   ############################
 
+  firewall 'default' do
+    action :install
+  end
+
   me['ports'].each do |port|
-     firewall_rule "Port#{port}" do
+     firewall_rule port do
        port     port.to_i
        command  :allow
      end
-end
+  end
+
+  group 'sensu' do
+    action :create
+  end
+
+  user 'sensu' do
+    comment 'Sensu User'
+    uid '1999'
+    gid 'sensu'
+    shell '/bin/zsh'
+  end
+
+  node.default["sensu"]["rabbitmq"]["host"]   = data_bag_item("demonops",id)['servertype_rabbitmq'][0]['hostname']
+  node.default["sensu"]["redis"]["host"]      = data_bag_item("demonops",id)['servertype_redis'][0]['hostname']
+  node.default["sensu"]["api"]["host"]        = node['hostname']
+  node.default["sensu"]["use_embedded_ruby"]  = true
+
+  include_recipe 'sensu::default'
+  include_recipe 'sensu::server_service'
+  include_recipe 'sensu::api_service'
 
   when "servertype_influxdb"
   puts "Selecting Server Type #{type}".blue

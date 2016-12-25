@@ -1,11 +1,25 @@
 {
   "id": "dev0",
   "servertype_lb": [
-
+    {
+      "hostname": "sensu",
+      "ports": [
+       4567,
+       6379,
+       5671,
+       22
+      ]
+    }
   ],
   "servertype_rabbitmq": [
+    {
+      "hostname": "sensu"
+    }
   ],
   "servertype_redis": [
+    {
+      "hostname": "sensu"
+    }
 
   ],
   "servertype_sensu": [
