@@ -7,14 +7,19 @@
 require 'spec_helper'
 
 describe 'demonops::default' do
+  include ChefVault::TestFixtures.rspec_shared_context
   context 'When all attributes are default, on an unspecified platform' do
     let(:chef_run) do
-      runner = ChefSpec::ServerRunner.new
-      runner.converge(described_recipe)
+      ChefSpec::ServerRunner.new(log_level: :error) do |node, server|
+         server.create_data_bag('demonops', {
+          'dev0' => parse_data_bag('demonops/dev0.json')
+        })
+      end.converge(described_recipe)
     end
 
-    it 'converges successfully' do
-      expect { chef_run }.to_not raise_error
+
+      it 'converges successfully' do
+        expect { chef_run }.to_not raise_error
+      end
     end
   end
-end
