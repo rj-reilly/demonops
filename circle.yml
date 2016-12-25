@@ -3,19 +3,11 @@ machine:
     - docker
 dependencies:
   pre:
-    - wget https://packages.chef.io/files/stable/chefdk/1.1.16/ubuntu/14.04/chefdk_1.1.16-1_amd64.deb;
-    - sudo dpkg -i chefdk_0.3.5-1_amd64.deb;
-    - chef gem install specific_install
-    - sudo chef gem uninstall chefspec
-    - chef gem install chefspec:4.0.1
     - chef gem install 'chef-vault-testfixtures'
     - chef gem install 'colorize'
     - chef gem install kitchen-ec2
     - sudo pip install awscli
-
-    # - cp ~/${CIRCLE_PROJECT_REPONAME}/test/circle/knife.rb ~/.chef/knife.rb
   cache_directories:
-    - ./chefdk_0.3.5-1_amd64.deb
 test:
   override:
     - chef exec berks install
