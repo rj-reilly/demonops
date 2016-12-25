@@ -123,6 +123,8 @@ mytypes.each do |type|
   include_recipe 'sensu::default'
   include_recipe 'sensu::server_service'
   include_recipe 'sensu::api_service'
+  include_recipe 'uchiwa::default'
+
 
   when "servertype_influxdb"
   puts "Selecting Server Type #{type}".blue
