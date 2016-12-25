@@ -15,7 +15,7 @@ dependencies:
     - chef gem install chefspec:4.0.1
     - chef gem install 'chef-vault-testfixtures'
     - chef gem install 'colorize'
-    - git glone https://github.com/test-kitchen/kitchen-ec2.git
+    - git clone https://github.com/test-kitchen/kitchen-ec2.git
     - export AWS_ACCESS_KEY_ID=AKIAIMWO7VCPGSP4JJNA
     - export AWS_SECRET_ACCESS_KEY=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
     - export AWS_DEFAULT_REGION=us-east-1
