@@ -3,12 +3,8 @@ machine:
     - docker
 dependencies:
   pre:
-    - if ! chef -v; then
-        if ! [ -f chefdk_0.3.5-1_amd64.deb ]; then
-          wget https://packages.chef.io/files/stable/chefdk/1.1.16/ubuntu/14.04/chefdk_1.1.16-1_amd64.deb;
-        fi;
-        sudo dpkg -i chefdk_0.3.5-1_amd64.deb;
-      fi
+    - wget https://packages.chef.io/files/stable/chefdk/1.1.16/ubuntu/14.04/chefdk_1.1.16-1_amd64.deb;
+    - sudo dpkg -i chefdk_0.3.5-1_amd64.deb;
     - chef gem install specific_install
     - sudo chef gem uninstall chefspec
     - chef gem install chefspec:4.0.1
