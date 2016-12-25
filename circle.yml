@@ -14,6 +14,7 @@ dependencies:
     - sudo chef gem uninstall chefspec
     - chef gem install chefspec:4.0.1
     - chef gem install 'chef-vault-testfixtures'
+    - chef gem install 'colorize'
     # - cp ~/${CIRCLE_PROJECT_REPONAME}/test/circle/knife.rb ~/.chef/knife.rb
   cache_directories:
     - ./chefdk_0.3.5-1_amd64.deb
