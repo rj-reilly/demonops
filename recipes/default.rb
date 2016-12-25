@@ -3,12 +3,13 @@
 # Recipe:: default
 #
 # Copyright (c) 2016 The Authors, All Rights Reserved.
-chef_gem 'colorize' do
+chef_gem 'colorize' do #~FC009
   action :install
   compile_time true
 end
 
 require 'colorize'
+
 
 query = "hostname:#{node['hostname']}"
 farm = search('demonops', query) # ~FC003
@@ -39,7 +40,7 @@ servertypes.each do |servertype|
     farm[servertype].each do |server|
       puts "found *** #{server}".green
       servers[servertype] << server["hostname"]
-      if node["hostname"].eql? (server["hostname"]) then
+      if node['hostname'].eql? (server['hostname']) then
         puts "#{servertype}".yellow
         mytypes.push(servertype)
         mytype = mytypes.last
@@ -85,7 +86,7 @@ mytypes.each do |type|
 
   when "servertype_redis"
   puts "Selecting Server Type #{type}".blue
-  include_recipe 'sensu::redis'
+  #include_recipe 'sensu::redis'
 
   when "servertype_sensu"
   puts "Selecting Server Type #{type}".blue
