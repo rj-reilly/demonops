@@ -5,22 +5,16 @@ dependencies:
   pre:
     - if ! chef -v; then
         if ! [ -f chefdk_0.3.5-1_amd64.deb ]; then
-          wget https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chefdk_0.3.5-1_amd64.deb;
+          wget https://packages.chef.io/files/stable/chefdk/1.1.16/ubuntu/14.04/chefdk_1.1.16-1_amd64.deb;
         fi;
         sudo dpkg -i chefdk_0.3.5-1_amd64.deb;
       fi
     - chef gem install specific_install
-    - sudo chef gem specific_install kitchen-docker -l http://github.com/peterabbott/kitchen-docker.git -b v1.6.4
     - sudo chef gem uninstall chefspec
     - chef gem install chefspec:4.0.1
     - chef gem install 'chef-vault-testfixtures'
     - chef gem install 'colorize'
-    #- git clone https://github.com/test-kitchen/kitchen-ec2.git
-    #- cd kitchen-ec2;bundle install; bundle exec rake install;cd ..
     - chef gem install kitchen-ec2
-    - export AWS_ACCESS_KEY_ID=AKIAIMWO7VCPGSP4JJNA
-    - export AWS_SECRET_ACCESS_KEY=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
-    - export AWS_DEFAULT_REGION=us-east-1
     - sudo pip install awscli
 
     # - cp ~/${CIRCLE_PROJECT_REPONAME}/test/circle/knife.rb ~/.chef/knife.rb
