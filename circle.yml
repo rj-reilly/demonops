@@ -14,7 +14,6 @@ dependencies:
     - sudo pip install awscli
 
     # - cp ~/${CIRCLE_PROJECT_REPONAME}/test/circle/knife.rb ~/.chef/knife.rb
-  cache_directories:
 test:
   override:
     - chef exec berks install
