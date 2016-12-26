@@ -12,11 +12,9 @@ dependencies:
     - chef gem install 'colorize'
     - chef gem install kitchen-ec2
     - sudo pip install awscli
-
-    # - cp ~/${CIRCLE_PROJECT_REPONAME}/test/circle/knife.rb ~/.chef/knife.rb
 test:
   override:
     - chef exec berks install
     #- chef exec rspec -P spec/**/*_spec.rb --tty --color
-    #- chef exec foodcritic . -X spec -f any -t ~FC003
+    #- chef exec foodcritic . -f any
     - chef exec kitchen test
