@@ -13,6 +13,8 @@ platforms:
 
 suites:
   - name: default
+    driver:
+      vm_hostname: sensu
     run_list:
       - recipe[demonops::default]
     attributes:
