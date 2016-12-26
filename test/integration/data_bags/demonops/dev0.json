@@ -3,7 +3,7 @@
   "servertype_lb": [
     {
       "hostname": "sensu",
-      "hostname": "compute.amazonaws.com",
+      "hostname": "compute-1.amazonaws.com",
       "ports": [
        4567,
        6379,
@@ -15,20 +15,20 @@
   "servertype_rabbitmq": [
     {
       "hostname": "sensu",
-      "hostname": "compute.amazonaws.com"
+      "hostname": "compute-1.amazonaws.com"
     }
   ],
   "servertype_redis": [
     {
       "hostname": "sensu",
-      "hostname": "compute.amazonaws.com"
+      "hostname": "compute-1.amazonaws.com"
     }
 
   ],
   "servertype_sensu": [
     {
       "hostname": "sensu",
-      "hostname": "compute.amazonaws.com",
+      "hostname": "compute-1.amazonaws.com",
       "ports": [22,4567]
     }
   ],
