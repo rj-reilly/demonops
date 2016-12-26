@@ -8,6 +8,7 @@ version '0.1.0'
 depends 'firewall'
 depends 'sensu'
 depends 'uchiwa'
+depends 'chef-sugar'
 
 issues_url 'https://github.com/rj-reilly/demonops/issues' if respond_to?(:issues_url)
 source_url 'https://github.com/rj-reilly/demonops' if respond_to?(:source_url)

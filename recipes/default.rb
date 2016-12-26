@@ -10,8 +10,14 @@ end
 
 require 'colorize'
 
+include_recipe 'chef-sugar::default'
 
-query = "hostname:#{node['hostname']}"
+if ec2? then
+  query = "*.compute-1.amazonaws.com"
+else
+  query = "hostname:#{node['hostname']}"
+end
+
 farm = search('demonops', query) # ~FC003
 if farm.count == 0
   farm = data_bag_item('demonops', node['demonops']['farm']).raw_data
