@@ -36,7 +36,7 @@ servertypes = %w(servertype_lb servertype_rabbitmq servertype_redis
                  servertype_sensu servertype_influxdb
                  servertype_statsd servertype_grafana servertype_analysis)
 
-
+log "#{node['hostname']}"
 
 servertypes.each do |servertype|
  puts "found * #{servertype}"
