@@ -13,7 +13,12 @@ require 'colorize'
 include_recipe 'chef-sugar::default'
 
 if ec2? then
-  query = "ip-"
+  execute 'set hostname' do
+    command '/bin/hostname sensu'
+    action :run
+  end
+
+  query = "hostname:#{node['hostname']}"
 else
   query = "hostname:#{node['hostname']}"
 end
