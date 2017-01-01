@@ -13,7 +13,7 @@ require 'colorize'
 include_recipe 'chef-sugar::default'
 
 if ec2? then
-  query = "*.compute-1.amazonaws.com"
+  query = "ip-"
 else
   query = "hostname:#{node['hostname']}"
 end
