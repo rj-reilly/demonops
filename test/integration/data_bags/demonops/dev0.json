@@ -3,6 +3,7 @@
   "servertype_lb": [
     {
       "hostname": "sensu",
+      "hostname": "ip-",
       "ports": [
        4567,
        6379,
@@ -13,19 +14,22 @@
   ],
   "servertype_rabbitmq": [
     {
-      "hostname": "sensu"
+      "hostname": "sensu",
+       "hostname": "ip-"
 
     }
   ],
   "servertype_redis": [
     {
-      "hostname": "sensu"
+      "hostname": "sensu",
+       "hostname": "ip-"
     }
 
   ],
   "servertype_sensu": [
     {
       "hostname": "sensu",
+       "hostname": "ip-",
       "ports": [22,4567]
     }
   ],
