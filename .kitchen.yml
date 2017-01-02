@@ -10,6 +10,7 @@ transport:
 
 platforms:
   - name: ubuntu-16.04
+    image_id: ami-4ba6b85c
 
 suites:
   - name: default
