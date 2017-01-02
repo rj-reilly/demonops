@@ -15,7 +15,7 @@ platforms:
 suites:
   - name: default
     driver:
-      user_data: "#!sudo /bin/hostname sensu"
+      user_data: "#! sudo /bin/hostname sensu"
     run_list:
       - recipe[demonops::default]
     attributes:
