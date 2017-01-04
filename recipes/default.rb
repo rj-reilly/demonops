@@ -13,10 +13,11 @@ require 'colorize'
 include_recipe 'chef-sugar::default'
 
 if node.include? ('testmode') then
-  hostname = node['testmod']['hostname']
-  query = "hostname:#{hostname}"
+  hname = node['testmod']['hostname']
+  query = "hostname:#{hname}"
 else
-  query = "hostname:#{node['hostname']}"
+  hname = node['hostname']
+  query = "hostname:#{hname}"
 end
 
 farm = search('demonops', query) # ~FC003
@@ -47,7 +48,7 @@ servertypes.each do |servertype|
     farm[servertype].each do |server|
       puts "found *** #{server}".green
       servers[servertype] << server["hostname"]
-      if node['hostname'].eql? (server['hostname']) then
+      if hname.eql? (server['hostname']) then
         puts "#{servertype}".yellow
         mytypes.push(servertype)
         mytype = mytypes.last
