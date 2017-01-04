@@ -15,7 +15,11 @@ platforms:
 suites:
   - name: default
     driver:
-      user_data: "#!/bin/bash sudo /bin/hostname sensu"
+      user_data: "q
+      #!/bin/bash sudo /bin/hostname sensu"
     run_list:
       - recipe[demonops::default]
     attributes:
+      demonops:
+        testmode: 1
+        hostname: 'sensu'

@@ -12,16 +12,10 @@ require 'colorize'
 
 include_recipe 'chef-sugar::default'
 
-if ec2? then
-  execute 'set hostname' do
-    command '/bin/hostname sensu'
-    action :run
-  end
-
-  query = "hostname:#{node['hostname']}"
-else
-  query = "hostname:#{node['hostname']}"
+if node.include? ("testmod") then
+  hostname = node['testmod']['hostname']
 end
+
 
 farm = search('demonops', query) # ~FC003
 if farm.count == 0
