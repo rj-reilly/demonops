@@ -13,7 +13,8 @@ require 'colorize'
 include_recipe 'chef-sugar::default'
 query = ''
 if node['demonops']['testmode'] then
-  query = "hostname:#{node['demonops']['testmode']['hostname']}"
+  db = data_bag_item("demonops","dev0")
+  query = "hostname:#{db['testmode']['hostname']}"
 else
   query = "hostname:#{node['hostname']}"
 end
