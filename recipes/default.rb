@@ -12,7 +12,7 @@ require 'colorize'
 
 include_recipe 'chef-sugar::default'
 
-if node.include? ("testmod") then
+if node.include? ('testmode') then
   hostname = node['testmod']['hostname']
 end
 
