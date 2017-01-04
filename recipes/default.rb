@@ -14,8 +14,10 @@ include_recipe 'chef-sugar::default'
 
 if node.include? ('testmode') then
   hostname = node['testmod']['hostname']
+  query = "hostname:#{hostname}"
+else
+  query = "hostname:#{node['hostname']}"
 end
-
 
 farm = search('demonops', query) # ~FC003
 if farm.count == 0
