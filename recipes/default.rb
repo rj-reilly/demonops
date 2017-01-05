@@ -90,6 +90,9 @@ mytypes.each do |type|
     not_if { ec2? }
   end
 
+  puts me
+  puts me['ports']
+
   me['ports'].each do |port|
      firewall_rule port do
        port     port.to_i
