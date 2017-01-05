@@ -157,6 +157,49 @@ mytypes.each do |type|
   when "servertype_influxdb"
   puts "Selecting Server Type #{type}".blue
 
+     include_recipe 'influxdb::default'
+
+    directory '/appdata' do
+      owner 'influxdb'
+      group 'influxdb'
+      mode '0755'
+      action :create
+    end
+
+    influxdb_install 'influxdb' do
+      action :install
+    end
+
+    cookbook_file '/etc/init.d/influxdb' do
+      source 'init.sh'
+      owner 'root'
+      group 'root'
+      mode '0644'
+    end
+
+    directory '/var/lib/influxdb' do
+      owner 'influxdb'
+      group 'influxdb'
+      mode '0755'
+      action :create
+    end
+
+    group 'influxdb' do
+      action :create
+      gid 888
+    end
+
+    user 'influxdb' do
+      action :create
+      comment 'Influxdb User'
+      uid 888
+      gid 'users'
+      home '/home/influxdb'
+      shell '/bin/zsh'
+      supports :manage_home => true
+    end
+
+
   when "servertype_statsd"
   puts "Selecting Server Type #{type}".blue
 

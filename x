@@ -1,12 +1,4 @@
-default['demonops']['farm'] = 'dev0'
-
-efault['influxdb']['lib_file_path'] = '/appdata/influxdb/lib/influxdb'
-default['influxdb']['meta_file_path'] = "#{node['influxdb']['lib_file_path']}/meta"
-default['influxdb']['data_file_path'] = "#{node['influxdb']['lib_file_path']}/data"
-default['influxdb']['wal_file_path'] = "#{node['influxdb']['lib_file_path']}/wal"
-default['influxdb']['hinted-handoff_file_path'] = "#{node['influxdb']['lib_file_path']}/hh"
-
-default['influxdb']['config'] = {
+x = {
   'reporting-disabled' => false,
   'meta' => {
     'enabled' => true,

@@ -30,6 +30,9 @@
     }
   ],
   "servertype_influxdb": [
+    {
+      "hostname": "sensu"
+    }
 
   ],
   "servertype_statsd": [
