@@ -18,3 +18,6 @@ test:
     #- chef exec rspec -P spec/**/*_spec.rb --tty --color
     #- chef exec foodcritic . -f any
     - chef exec kitchen test
+post:
+  - chef exec kitchen destroy
+
