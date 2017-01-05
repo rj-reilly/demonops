@@ -47,7 +47,13 @@ servertypes.each do |servertype|
     farm[servertype].each do |server|
       puts "found *** #{server}".green
       servers[servertype] << server["hostname"]
-      if node['hostname'].eql? (server['hostname']) then
+      if node['demonops']['testmode'] then
+        hostname = node['demonops']['hostname']
+      else
+        hostname = node['hostname']
+      end
+
+      if hostname == (server['hostname']) then
         puts "#{servertype}".yellow
         mytypes.push(servertype)
         mytype = mytypes.last
