@@ -11,6 +11,8 @@ end
 require 'colorize'
 
 include_recipe 'chef-sugar::default'
+include_recipe 'hostfile::default'
+
 query = ''
 if node['demonops']['testmode'] then
   query = "hostname:#{node['demonops']['hostname']}"
@@ -63,6 +65,15 @@ servertypes.each do |servertype|
     end
   end
 end
+
+
+if node['demonops']['hostname'] then
+  hostsfile_entry node['ipaddress'] do
+    hostname  node['demonops']['hostname']
+    unique    false
+  end
+end
+
 
 ############################
 #set the id of the dbag

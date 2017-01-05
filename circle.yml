@@ -20,5 +20,5 @@ test:
     - chef exec kitchen test
   post:
     - cp -rf .kitchen $CIRCLE_ARTIFACTS
-    #- chef exec kitchen destroy
+    - chef exec kitchen destroy
 
