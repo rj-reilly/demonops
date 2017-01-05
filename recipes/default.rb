@@ -118,8 +118,8 @@ mytypes.each do |type|
      firewall_rule port do
        port     port.to_i
        command  :allow
+      not_if { ec2? }
      end
-     not_if { ec2? }
   end
 
   group 'sensu' do
