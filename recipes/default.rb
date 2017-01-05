@@ -11,7 +11,7 @@ end
 require 'colorize'
 
 include_recipe 'chef-sugar::default'
-include_recipe 'hostfile::default'
+include_recipe 'hostsfile::default'
 
 query = ''
 if node['demonops']['testmode'] then
