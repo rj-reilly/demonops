@@ -1,0 +1,23 @@
+machine:
+  services:
+    - docker
+dependencies:
+  pre:
+    - wget https://packages.chef.io/files/stable/chefdk/1.1.16/ubuntu/14.04/chefdk_1.1.16-1_amd64.deb
+    - sudo dpkg -i chefdk_1.1.16-1_amd64.deb
+    - chef gem install specific_install
+    - sudo chef gem uninstall chefspec
+    - chef gem install chefspec:4.0.1
+    - chef gem install 'chef-vault-testfixtures'
+    - chef gem install 'colorize'
+    - chef gem install kitchen-ec2
+    - sudo pip install awscli
+test:
+  override:
+    - chef exec berks install
+    #- chef exec rspec -P spec/**/*_spec.rb --tty --color
+    #- chef exec foodcritic . -f any
+    - chef exec kitchen test
+  post:
+    - cp -rf .kitchen $CIRCLE_ARTIFACTS
+    - chef exec kitchen destroy
