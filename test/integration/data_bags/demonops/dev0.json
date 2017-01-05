@@ -2,7 +2,7 @@
   "id": "dev0",
   "servertype_lb": [
     {
-      "hostname": "xx",
+      "hostname": "sensu",
       "ports": [
        4567,
        6379,
