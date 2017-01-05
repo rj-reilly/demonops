@@ -19,6 +19,6 @@ test:
     #- chef exec foodcritic . -f any
     - chef exec kitchen test
   post:
-    - cp -rf /tmp/kitchen $CIRCLE_ARTIFACTS
+    - cp -rf .kitchen $CIRCLE_ARTIFACTS
     - chef exec kitchen destroy
 
