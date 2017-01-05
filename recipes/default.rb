@@ -77,12 +77,14 @@ mytypes.each do |type|
 
   firewall 'default' do
     action :install
+    not_if { ec2? }
   end
 
   me['ports'].each do |port|
      firewall_rule port do
        port     port.to_i
        command  :allow
+       not_if { ec2? }
      end
   end
 
@@ -109,6 +111,7 @@ mytypes.each do |type|
 
   firewall 'default' do
     action :install
+    not_if { ec2? }
   end
 
   me['ports'].each do |port|
@@ -116,6 +119,7 @@ mytypes.each do |type|
        port     port.to_i
        command  :allow
      end
+     not_if { ec2? }
   end
 
   group 'sensu' do
