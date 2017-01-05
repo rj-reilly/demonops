@@ -9,8 +9,7 @@ transport:
  ssh_key: ~/demonops/rreilly.pem
 
 platforms:
-  - name: ubuntu-16.04
-    image_id: ami-4ba6b85c
+  - name: ubuntu-14.04
     instance_type: m4.large
 
 suites:
