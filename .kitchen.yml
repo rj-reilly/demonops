@@ -6,7 +6,7 @@ provisioner:
   name: chef_solo
 
 transport:
- ssh_key: ~/demonops/rreilly.pem
+ ssh_key: ~/.ssh/rreilly.pem
 
 platforms:
   - name: ubuntu-14.04
@@ -15,8 +15,7 @@ platforms:
 suites:
   - name: default
     driver:
-      user_data: "q
-      #!/bin/bash sudo /bin/hostname sensu"
+      user_data: "#!/bin/bash sudo /bin/hostname sensu"
     run_list:
       - recipe[demonops::default]
     attributes:
