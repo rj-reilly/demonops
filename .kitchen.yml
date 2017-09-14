@@ -1,16 +1,23 @@
 ---
 driver:
   name: ec2
+  subnet_id: subnet-48e58e44
+  instance_type: t2.large
+  aws_ssh_key_id: rreilly-ec2
+  associate_public_ip: false
 
 provisioner:
   name: chef_solo
 
 transport:
- ssh_key: ~/.ssh/rreilly.pem
+  ssh_key: ~/.ssh/rreilly.pem
 
 platforms:
-  - name: ubuntu-14.04
-    instance_type: m4.large
+  - name: ubuntu-17.04
+    image_id: ami-fb310580
+    tags: '{"created-by" => "rreilly", "name" => "test-kitchen"}'
+
+
 
 suites:
   - name: default
