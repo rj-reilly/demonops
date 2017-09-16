@@ -85,36 +85,25 @@ mytypes.each do |type|
   when "servertype_lb"
   puts "Selecting Server Type #{type}".blue
 
-  firewall 'default' do
-    action :install
-    not_if { ec2? }
-  end
-
-  puts me
-  puts me['ports']
-
-  # me['ports'].each do |port|
-  #    firewall_rule port do
-  #      port     port.to_i
-  #      command  :allow
-  #      not_if { ec2? }
-  #    end
-  # end
-
-
-  package 'haproxy' do
-    action :install
-  end
-
 
   when "servertype_rabbitmq"
   puts "Selecting Server Type #{type}".blue
-  include_recipe 'sensu::rabbitmq'
+  #include_recipe 'sensu::rabbitmq'
 
 
   when "servertype_redis"
   puts "Selecting Server Type #{type}".blue
   #include_recipe 'sensu::redis'
+
+  package 'redis-server' do
+    action :install
+  end
+  
+
+  package 'redis-tools' do
+    action :install
+  end
+  
 
   when "servertype_sensu"
   puts "Selecting Server Type #{type}".blue
@@ -122,18 +111,6 @@ mytypes.each do |type|
   #Fire wall rules for everyone
   ############################
 
-  firewall 'default' do
-    action :install
-    not_if { ec2? }
-  end
-
-  me['ports'].each do |port|
-     firewall_rule port do
-       port     port.to_i
-       command  :allow
-      not_if { ec2? }
-     end
-  end
 
   group 'sensu' do
     action :create
@@ -145,21 +122,56 @@ mytypes.each do |type|
     gid 'sensu'
     shell '/bin/zsh'
   end
+  
+  cookbook_file '/etc/sensu/conf.d/transport.json' do
+    source 'transport.json'
+    owner 'sensu'
+    group 'sensu'
+    mode '0644'
+  end
+  
 
-  node.default["sensu"]["rabbitmq"]["host"]   = data_bag_item("demonops",id)['servertype_rabbitmq'][0]['hostname']
-  node.default["sensu"]["redis"]["host"]      = data_bag_item("demonops",id)['servertype_redis'][0]['hostname']
-  node.default["sensu"]["api"]["host"]        = node['hostname']
-  node.default["sensu"]["use_embedded_ruby"]  = true
+  cookbook_file '/etc/sensu/conf.d/api.json' do
+    source 'api.json'
+    owner 'sensu'
+    group 'sensu'
+    mode '0644'
+  end
+  
+  execute 'import key' do
+    command 'wget -q https://sensu.global.ssl.fastly.net/apt/pubkey.gpg -O- | sudo apt-key add -'
+    action :run
+  end
 
-  include_recipe 'sensu::default'
-  include_recipe 'sensu::server_service'
-  include_recipe 'sensu::api_service'
-  include_recipe 'uchiwa::default'
+  apt_repository 'sensu' do
+    uri 'https://sensu.global.ssl.fastly.net/apt'
+    components ['main']  
+  end
 
+  
+  apt_update
 
+  package 'sensu' do
+    action :install
+  end
+  
   when "servertype_influxdb"
   puts "Selecting Server Type #{type}".blue
 
+    group 'influxdb' do
+      action :create
+      gid 888
+    end
+
+    user 'influxdb' do
+      action :create
+      comment 'Influxdb User'
+      uid 888
+      gid 'users'
+      home '/home/influxdb'
+      shell '/bin/zsh'
+      manage_home true
+    end
      include_recipe 'influxdb::default'
 
     directory '/appdata' do
@@ -174,7 +186,7 @@ mytypes.each do |type|
     end
 
     cookbook_file '/etc/init.d/influxdb' do
-      source 'init.sh'
+      source 'influxdb'
       owner 'root'
       group 'root'
       mode '0644'
@@ -187,20 +199,7 @@ mytypes.each do |type|
       action :create
     end
 
-    group 'influxdb' do
-      action :create
-      gid 888
-    end
 
-    user 'influxdb' do
-      action :create
-      comment 'Influxdb User'
-      uid 888
-      gid 'users'
-      home '/home/influxdb'
-      shell '/bin/zsh'
-      supports :manage_home => true
-    end
 
 
   when "servertype_statsd"

@@ -1,10 +1,13 @@
 ---
 driver:
   name: ec2
-  subnet_id: subnet-48e58e44
+  subnet_id: subnet-b7d1e9da
   instance_type: t2.large
   aws_ssh_key_id: rreilly-ec2
   associate_public_ip: false
+  security_group_ids:
+    - sg-837866e1
+    - sg-16995a73
 
 provisioner:
   name: chef_solo
@@ -13,16 +16,16 @@ transport:
   ssh_key: ~/.ssh/rreilly.pem
 
 platforms:
-  - name: ubuntu-17.04
-    image_id: ami-fb310580
-    tags: '{"created-by" => "rreilly", "name" => "test-kitchen"}'
-
-
+  - name: ubuntu-16.04
+    image_id: ami-7f162204
 
 suites:
   - name: default
     driver:
-      user_data: "#!/bin/bash sudo /bin/hostname sensu"
+      user_data: "#!/bin/bash sudo hostnamectl set-hostname sensu"
+      tags:
+        created-by: rreilly
+        Name: test-kitchen
     run_list:
       - recipe[demonops::default]
     attributes:

@@ -17,6 +17,17 @@ describe 'demonops::default' do
       end.converge(described_recipe)
     end
 
+      it 'installs the chef_gem[colorize] with the default options' do
+        expect(chef_run).to install_chef_gem('colorize') 
+      end
+      
+      it 'install the package[sensu] using the default options' do
+        expect(chef_run).to install_package('sensu') 
+      end
+
+      it 'install the package[redis] with the default options' do
+        expect(chef_run).to install_package('redis') 
+      end
 
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
