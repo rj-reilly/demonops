@@ -1,0 +1,20 @@
+---
+driver:
+  name: "terraform"
+  directory: "test/fixtures/us_east_1"
+  parallelism: 4
+provisioner:
+  name: "terraform"
+
+transport:
+  name: "ssh"
+
+verifier:
+  name: inspec
+    format: junit
+
+platforms:
+  - name: "ubuntu"
+
+suites:
+  - name: "example"

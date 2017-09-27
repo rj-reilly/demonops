@@ -35,7 +35,7 @@ servers = {}
 mytypes = Array.new
 mytype = ''
 servertypes = %w(servertype_lb servertype_rabbitmq servertype_redis
-                 servertype_sensu servertype_influxdb
+                 servertype_sensu servertype_influxdb 
                  servertype_statsd servertype_grafana servertype_analysis)
 
 log "#{node['hostname']}"
@@ -79,6 +79,10 @@ end
 ############################
 id = farm['id']
 
+package 'zsh' do
+  action :install
+end
+
 
 mytypes.each do |type|
   case type
@@ -95,22 +99,17 @@ mytypes.each do |type|
   puts "Selecting Server Type #{type}".blue
   #include_recipe 'sensu::redis'
 
-  package 'redis-server' do
+  package %w(redis-server redis-tools) do
     action :install
   end
-  
 
-  package 'redis-tools' do
+  package %w(npm nodejs) do
     action :install
   end
   
 
   when "servertype_sensu"
   puts "Selecting Server Type #{type}".blue
-  ############################
-  #Fire wall rules for everyone
-  ############################
-
 
   group 'sensu' do
     action :create
@@ -122,7 +121,16 @@ mytypes.each do |type|
     gid 'sensu'
     shell '/bin/zsh'
   end
-  
+    
+  directory '/etc/sensu/conf.d/' do
+    owner 'sensu'
+    group 'sensu'
+    mode '0755'
+    action :create
+    recursive true
+  end
+
+
   cookbook_file '/etc/sensu/conf.d/transport.json' do
     source 'transport.json'
     owner 'sensu'
@@ -138,6 +146,13 @@ mytypes.each do |type|
     mode '0644'
   end
   
+   cookbook_file '/etc/sensu/conf.d/config.json' do
+    source 'config.json'
+    owner 'sensu'
+    group 'sensu'
+    mode '0644'
+  end
+
   execute 'import key' do
     command 'wget -q https://sensu.global.ssl.fastly.net/apt/pubkey.gpg -O- | sudo apt-key add -'
     action :run
@@ -154,7 +169,148 @@ mytypes.each do |type|
   package 'sensu' do
     action :install
   end
+
   
+  template '/etc/systemd/system/sensu-server.service' do
+    source 'sensu-server.service.erb'
+    owner 'root'
+    group 'root'
+    action :create
+    notifies :run, 'execute[systemctl daemon-reload]', :immediately
+    notifies :restart, 'service[sensu-server]', :delayed
+  end
+
+  template '/etc/systemd/system/sensu-api.service' do
+    source 'sensu-api.service.erb'
+    owner 'root'
+    group 'root'
+    action :create
+    notifies :run, 'execute[systemctl daemon-reload]', :immediately
+    notifies :restart, 'service[sensu-api]', :delayed
+  end
+
+
+
+  # cookbook_file '/etc/sensu/extensions/influxdb_line_protocol.rb' do
+  #   source 'influxdb_line_protocol.rb'
+  #   owner 'sensu'
+  #   group 'sensu'
+  #   mode '0644'
+  #   notifies :restart, 'service[sensu-server]', :delayed
+  #   notifies :restart, 'service[sensu-api]', :delayed
+  # end
+
+  cookbook_file '/etc/sensu/conf.d/handlers.json' do
+    source 'handlers.json'
+    owner 'sensu'
+    group 'sensu'
+    mode '0644'
+    notifies :restart, 'service[sensu-server]', :delayed
+    notifies :restart, 'service[sensu-api]', :delayed
+  end
+
+  plugins = data_bag_item('demonops', id)['plugins']
+
+  plugins.each do |p|
+    sensu_gem "sensu-plugins-#{p}" do
+    end  
+  end
+
+  # gem_package 'influxdb' do
+  #   gem_binary '/opt/sensu/embedded/bin/gem'
+  # end
+
+  # cookbook_file '/etc/sensu/plugins/influxdb_line_protocol.rb' do
+  #   source 'influxdb_line_protocol.rb'
+  #   owner 'sensu'
+  #   group 'sensu'
+  #   mode '0755'
+  #   notifies :restart, 'service[sensu-server]', :immediately
+  #   notifies :restart, 'service[sensu-api]', :immediately
+  # end
+  
+  # cookbook_file '/etc/sensu/conf.d/mutators.json' do
+  #   source 'mutators.json'
+  #   owner 'sensu'
+  #   group 'sensu'
+  #   mode '0644'
+  #   notifies :restart, 'service[sensu-server]', :immediately
+  #   notifies :restart, 'service[sensu-api]', :immediately
+  # end
+  
+  sensu_gem "influxdb"
+
+  cookbook_file "/etc/sensu/extensions/influx.rb" do
+    source "influx.rb"
+    mode 0755
+  end
+
+  sensu_snippet "influx" do
+    content(
+      :host => '127.0.0.1',
+      :port => '8086',
+      :user => 'root',
+      :password => 'root',
+      :database => 'statsd',
+      :strip_metric => node.name
+    )
+  end
+   
+  cookbook_file '/etc/sensu/conf.d/checks.json' do
+    source 'checks.json'
+    owner 'sensu'
+    group 'sensu'
+    mode '0644'
+    notifies :restart, 'service[sensu-server]', :delayed
+    notifies :restart, 'service[sensu-api]', :delayed
+  end
+
+
+  link '/etc/sensu/extensions/mutator-influxdb-line-protocol.rb' do
+    to '/opt/sensu/embedded/bin/mutator-influxdb-line-protocol.rb'
+    notifies :restart, 'service[sensu-server]', :delayed
+    notifies :restart, 'service[sensu-api]', :delayed
+  end
+
+  execute 'systemctl daemon-reload' do
+    command 'systemctl daemon-reload'
+    action :nothing
+  end
+
+  service 'sensu-server' do
+    provider Chef::Provider::Service::Systemd
+    retries 5
+    retry_delay 10
+    action [:enable, :start]
+  end
+  
+
+  service 'sensu-api' do
+    provider Chef::Provider::Service::Systemd
+    retries 5
+    retry_delay 10
+    action [:enable, :start]
+  end
+  
+  
+  package 'uchiwa' do
+    action :install
+  end
+  
+template '/etc/sensu/uchiwa.json' do
+  source 'uchiwa.json.erb'
+  owner 'sensu'
+  group 'sensu'
+  mode '0644'
+  notifies :restart, 'service[uchiwa]'
+end
+
+  service 'uchiwa' do
+    supports :status => true, :restart => true, :reload => true
+    action [:start, :enable]
+  end
+  
+
   when "servertype_influxdb"
   puts "Selecting Server Type #{type}".blue
 
@@ -172,6 +328,7 @@ mytypes.each do |type|
       shell '/bin/zsh'
       manage_home true
     end
+
      include_recipe 'influxdb::default'
 
     directory '/appdata' do
@@ -198,8 +355,10 @@ mytypes.each do |type|
       mode '0755'
       action :create
     end
-
-
+    
+  influxdb_database 'statsd' do
+    action :create
+  end
 
 
   when "servertype_statsd"
@@ -208,7 +367,42 @@ mytypes.each do |type|
   when "servertype_grafana"
   puts "Selecting Server Type #{type}".blue
 
+  execute 'import key' do
+    command 'curl -L https://packagecloud.io/grafana/stable/gpgkey | sudo apt-key add -'
+    action :run
+    notifies :create, 'file[/tmp/apt-key]', :immediately
+  end
+  
+  file '/tmp/apt-key' do
+    action :nothing
+    owner 'root'
+    group 'root'
+    mode '0644'
+  end
+  
+  apt_repository 'grafana' do
+    uri 'deb https://packagecloud.io/grafana/stable/debian/'
+    components ['main']
+    distribution 'jessie'
+    keyserver 'packagecloud.io'
+    action :add
+    deb_src true
+    ignore_failure true
+    end
+
+    package 'grafana' do
+      action :install
+    end
+
+    service 'grafana-server' do
+      supports :status => true, :restart => true, :reload => true
+      action [:start, :enable]
+    end
+    
+    
+
   when "servertype_analysis"
   puts "Selecting Server Type #{type}".blue
   end
+
 end

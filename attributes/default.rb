@@ -6,12 +6,14 @@ default['influxdb']['data_file_path'] = "#{node['influxdb']['lib_file_path']}/da
 default['influxdb']['wal_file_path'] = "#{node['influxdb']['lib_file_path']}/wal"
 default['influxdb']['hinted-handoff_file_path'] = "#{node['influxdb']['lib_file_path']}/hh"
 
+
+
 default['influxdb']['config'] = {
   'reporting-disabled' => false,
   'meta' => {
     'enabled' => true,
     'dir' => node['influxdb']['meta_file_path'],
-    'bind-address' => "#{node['ipaddress']}:8088",
+    'bind-address' => "127.0.0.1:8088",
     'retention-autocreate' => true,
     'election-timeout' => '1s',
     'heartbeat-timeout' => '1s',
@@ -62,13 +64,13 @@ default['influxdb']['config'] = {
   },
   'admin' => {
     'enabled' => true,
-    'bind-address' => "#{node['ipaddress']}:8083",
+    'bind-address' => "127.0.0.1:8083",
     'https-enabled' => false,
     'https-certificate' => node['influxdb']['ssl_cert_file_path']
   },
   'http' => {
     'enabled' => true,
-    'bind-address' => "#{node['ipaddress']}:8086",
+    'bind-address' => "127.0.0.1:8086",
     'auth-enabled' => false,
     'log-enabled' => true,
     'write-tracing' => false,
@@ -79,8 +81,8 @@ default['influxdb']['config'] = {
  'udp' => [
     {
       'enabled' => true,
-      'bind-address'=> "#{node['ipaddress']}:8090",
-      'database' => 'sys_metrics',
+      'bind-address'=> "127.0.0.1:8090",
+      'database' => 'statsd',
       'batch-size' => 1000,
       'batch-pending' => 5,
       'batch-timeout' => '1s',

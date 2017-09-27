@@ -26,7 +26,13 @@
   "servertype_sensu": [
     {
       "hostname": "sensu",
-      "ports": [22,4567]
+      "ports": [22,4567],
+      "plugins": [
+        "load-checks",
+        "memory-checks",
+        "disk-checks",
+        "network-interface"
+      ]
     }
   ],
   "servertype_influxdb": [
@@ -39,9 +45,21 @@
 
   ],
   "servertype_grafana": [
+    {
+      "hostname": "sensu",
+      "ports": [3000]
+    }
 
   ],
   "servertype_analysis": [
 
-  ]
+  ],
+
+  "plugins": [
+    "load-checks",
+    "memory-checks",
+    "disk-checks",
+    "network-interface"
+
+    ]
 }

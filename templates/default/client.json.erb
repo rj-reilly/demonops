@@ -1,0 +1,15 @@
+{
+  "client": {
+    "name": "<%="#{node['hostname']}"%>",
+    "address": "<%="#{node['ipaddess']}"%>",
+    "environment": "dev",
+    "subscriptions": [
+      "dev",
+      "linux"
+    ],
+    "socket": {
+      "bind": "<%="#{node['ipaddess']}"%>",
+      "port": 3030
+    }
+  }
+}

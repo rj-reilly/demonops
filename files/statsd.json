@@ -1,0 +1,11 @@
+{
+  "name":"statsd",
+  "type":"influxdb",
+  "url":"http://127.0.0.1",
+  "access":"proxy",
+  "basicAuth": true,
+  "password": "root",
+  "user":"root",
+  "basicAuthUser":"root",
+  "basicAuthPassword":"root"
+}
