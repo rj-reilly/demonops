@@ -6,7 +6,9 @@ default['influxdb']['data_file_path'] = "#{node['influxdb']['lib_file_path']}/da
 default['influxdb']['wal_file_path'] = "#{node['influxdb']['lib_file_path']}/wal"
 default['influxdb']['hinted-handoff_file_path'] = "#{node['influxdb']['lib_file_path']}/hh"
 
-
+default['grafana']['manage_install'] =  true 
+default['grafana']['install_type'] = 'package'
+default['grafana']['webserver'] = ''
 
 default['influxdb']['config'] = {
   'reporting-disabled' => false,

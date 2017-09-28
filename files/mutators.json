@@ -1,7 +1,7 @@
 {
   "mutators": {
     "influxdb_line_protocol": {
-      "command": "/etc/sensu/plugins/influxdb_line_protocol.rb"
+      "command": "/etc/sensu/plugins/mutator-influxdb_line_protocol.rb"
     }
   }
 }

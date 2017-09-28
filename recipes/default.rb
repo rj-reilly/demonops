@@ -189,16 +189,13 @@ mytypes.each do |type|
     notifies :restart, 'service[sensu-api]', :delayed
   end
 
-
-
-  # cookbook_file '/etc/sensu/extensions/influxdb_line_protocol.rb' do
-  #   source 'influxdb_line_protocol.rb'
-  #   owner 'sensu'
-  #   group 'sensu'
-  #   mode '0644'
-  #   notifies :restart, 'service[sensu-server]', :delayed
-  #   notifies :restart, 'service[sensu-api]', :delayed
-  # end
+  cookbook_file '/etc/sensu/conf.d/mutators.json' do
+    source 'mutators.json'
+    owner 'sensu'
+    group 'sensu'
+    mode '0644'
+  end
+  
 
   cookbook_file '/etc/sensu/conf.d/handlers.json' do
     source 'handlers.json'
@@ -215,35 +212,8 @@ mytypes.each do |type|
     sensu_gem "sensu-plugins-#{p}" do
     end  
   end
-
-  # gem_package 'influxdb' do
-  #   gem_binary '/opt/sensu/embedded/bin/gem'
-  # end
-
-  # cookbook_file '/etc/sensu/plugins/influxdb_line_protocol.rb' do
-  #   source 'influxdb_line_protocol.rb'
-  #   owner 'sensu'
-  #   group 'sensu'
-  #   mode '0755'
-  #   notifies :restart, 'service[sensu-server]', :immediately
-  #   notifies :restart, 'service[sensu-api]', :immediately
-  # end
-  
-  # cookbook_file '/etc/sensu/conf.d/mutators.json' do
-  #   source 'mutators.json'
-  #   owner 'sensu'
-  #   group 'sensu'
-  #   mode '0644'
-  #   notifies :restart, 'service[sensu-server]', :immediately
-  #   notifies :restart, 'service[sensu-api]', :immediately
-  # end
   
   sensu_gem "influxdb"
-
-  cookbook_file "/etc/sensu/extensions/influx.rb" do
-    source "influx.rb"
-    mode 0755
-  end
 
   sensu_snippet "influx" do
     content(
@@ -398,7 +368,6 @@ end
       supports :status => true, :restart => true, :reload => true
       action [:start, :enable]
     end
-    
     
 
   when "servertype_analysis"
